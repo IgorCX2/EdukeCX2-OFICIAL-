@@ -1,4 +1,4 @@
-import MenuTopo from "@/components/elementosPrincipais/menuTopo";
+import MenuTopo from "@/components/elementosPrincipais/menus/topo/menuTopo";
 import Rodape from "@/components/elementosPrincipais/rodape";
 
 export default async function LayoutMenuTopo(props){

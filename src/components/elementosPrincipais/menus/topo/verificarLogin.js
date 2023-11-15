@@ -1,9 +1,9 @@
 "use client"
 import Link from "next/link"
-import Btn from "../botoes/btn"
+import Btn from "../../../botoes/btn"
 import { cookieAction } from "src/app/action"
 import { useEffect, useState } from 'react';
-import BoxCarregando from "../carregando/boxcarregando";
+import BoxCarregando from "../../../carregando/boxcarregando";
 
 export default function VerificarLogin({value}) {
     const [pegarCookieLogin, setPegarCookieLogin] = useState("Carregando");

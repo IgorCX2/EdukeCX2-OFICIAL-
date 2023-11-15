@@ -2,7 +2,13 @@ import Image from "next/image";
 import Btn from "@/components/botoes/btn";
 import BoxDescricao from "@/components/containers/boxDescricoes";
 import Container from "@/components/containers/container";
-export default function PaginaHome({ context }) {
+export const metadata = {
+    title: 'Home | EdukeCX2',
+    openGraph: {
+      title: 'Home | EdukeCX2',
+    },
+}
+export default function PaginaHome() {
     return (
         <main className="relative top-0 left-0">
             <section className="relative w-screen h-screen flex justify-center">

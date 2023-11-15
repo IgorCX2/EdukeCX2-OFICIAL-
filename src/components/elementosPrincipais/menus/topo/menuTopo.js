@@ -2,12 +2,9 @@
 import Link from "next/link";
 import { Suspense, useState } from "react";
 import { useSelectedLayoutSegment } from 'next/navigation'
-import Container from "../containers/container";
-import LogoEduke from "./logo";
+import Container from "../../../containers/container";
+import LogoEduke from "../../logo";
 import VerificarLogin from "./verificarLogin";
-import { cookieAction } from "src/app/action";
-
-
 
 export default function MenuTopo() {
     const paramsLink = useSelectedLayoutSegment();

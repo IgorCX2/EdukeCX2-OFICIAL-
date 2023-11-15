@@ -1,6 +1,13 @@
 import Image from 'next/image';
 import Btn from '@/components/botoes/btn';
-
+export const metadata = {
+    title: 'Página não encontrada | EdukeCX2',
+    description: 'Infelizmente não consegumos localizar esta página em nossos servidores!',
+    openGraph: {
+      title: 'Página não encontrada | EdukeCX2',
+      description: 'Infelizmente não consegumos localizar esta página em nossos servidores!',
+    },
+}
 export default function NotFound(){
     return(
         <main className="absolute top-0 left-0 h-full w-full bg-white flex items-center justify-center gap-10">

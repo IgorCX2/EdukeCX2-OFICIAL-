@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useSelectedLayoutSegment } from 'next/navigation'
-import Container from '../containers/container';
+import Container from "../containers/container";
 import LogoEduke from './logo';
 
 export default function Rodape(){
