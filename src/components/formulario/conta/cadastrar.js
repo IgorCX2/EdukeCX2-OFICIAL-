@@ -34,9 +34,6 @@ export default function FormContaCadastrar() {
     const SendCadastro = async e => {
         e.preventDefault()
         setLoadingStatus(true)
-        console.log(process.env.LOCAL_API)
-        console.log(process.env)
-        console.log(process.env.CHAVE_CODIFICADORA)
         if(formDados.nome && formDados.email){
             if(formDados.senha.length >= 6 && formDados.nome.length >=3){
                 const responseEnv = await postCadastro(formDados)

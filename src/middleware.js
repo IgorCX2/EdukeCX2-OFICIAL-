@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server"
 
 export default function middleware(request) {
+    const ip = request.ip || "";
+    console.log(ip)
     const valueToken = request.cookies.get('UserToken')?.value
     const urlLogin = new URL('/conta/entrar', request.url)
     const urlAprender = new URL('/aprender', request.url)

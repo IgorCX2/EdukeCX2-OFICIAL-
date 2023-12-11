@@ -1,3 +1,4 @@
+
 import FormContaEntrar from "@/components/formulario/conta/entrar"
 export const metadata = {
     title: 'Entrar | EdukeCX2',

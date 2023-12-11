@@ -1,6 +1,6 @@
 require('dotenv').config();
 const crypto = require('crypto');
-export function encryptData(data, ip, cod) {
+export function encryptData(data, cod) {
   const key = Buffer.from(cod, 'hex');
   const iv = crypto.randomBytes(16);
   const cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(key), iv);

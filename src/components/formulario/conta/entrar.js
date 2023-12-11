@@ -1,5 +1,5 @@
 "use client";
-
+require('dotenv').config();
 import Link from "next/link";
 import dynamic from 'next/dynamic'
 import { useState } from "react"
@@ -12,9 +12,9 @@ const FormContaVerificar = dynamic(() => import('./verificar'));
 import TelaCarregando from "@/components/carregando/telacarregando";
 async function postEntrar(formCadastro) {
     try {
-        const apiEntrar = await fetch('https://api.aprendacomeduke.com.br/api/contaRegistro/entrar', {
+        const apiEntrar = await fetch(`${Envs.API_LOCAL}api/contaRegistro/entrar`, {
             method: 'POST',
-            body: JSON.stringify({ form: formCadastro }),
+            body: JSON.stringify({ dados: formCadastro }),
             headers: { 'Content-Type': 'application/json', }
         });
         return apiEntrar.json()
@@ -22,7 +22,6 @@ async function postEntrar(formCadastro) {
         return error
     }
 }
-
 export default function FormContaEntrar({modal}) {
     const router = useRouter();
     const [loadingStatus, setLoadingStatus] = useState(false)
@@ -42,22 +41,9 @@ export default function FormContaEntrar({modal}) {
         setLoadingStatus(true)
         if (formDados.email) {
             if (formDados.senha.length >= 6) {
-                const segurancaReserva = encryptData(JSON.stringify(formDados), 'ip', Envs.CHAVE_CODIFICADORA)
-                console.log(segurancaReserva)
-                /*const responseEnv = await postEntrar(segurancaReserva)
-                if (responseEnv.status == 200) {
-                    const cadCookie = await cookieAction('cadastrar', 'UserToken', responseEnv.token, 60*100)
-                    return router.push('/aprender')
-                } else {
-                    setResponse({
-                        id: responseEnv.id,
-                        status: responseEnv.status,
-                        msg: responseEnv.msg
-                    });
-                }
-                if (responseEnv.status == 'verificar') {
-                    setStatusVerificadores(true)
-                }*/
+                const segurancaReserva = encryptData(JSON.stringify(formDados), Envs.CHAVE_CODIFICADORA)
+                const responseEnv = await postEntrar(segurancaReserva)
+                //const removerSeguranca = decryptData(responseEnv, Envs.CHAVE_CODIFICADORA)
             } else {
                 setResponse({ msg: "Obs: a senha deve ser maior que 6 digitos", status: '' })
             }
