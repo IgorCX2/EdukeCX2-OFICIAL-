@@ -1,14 +1,17 @@
 "use client";
+require('dotenv').config();
 import { useState } from "react";
+import { Envs } from "src/utils/configEnv"
+import { encryptData } from "script/criptografarDados"
 import InputFunction from "../inputForms";
 import Btn from "@/components/botoes/btn";
 import TelaCarregando from "@/components/carregando/telacarregando";
 
-async function ValidarEmail(formCadastro) {
+async function ValidarEmail(formValidar) {
     try {
-        const apiValidarEmail = await fetch('https://api.aprendacomeduke.com.br/api/contaRegistro/recuperar-senha', {
+        const apiValidarEmail = await fetch(`${Envs.API_LOCAL}api/contaRegistro/recuperar-senha`, {
             method: 'POST',
-            body: JSON.stringify({ form: formCadastro }),
+            body: JSON.stringify({ dados: formValidar }),
             headers: { 'Content-Type': 'application/json', }
         });
         return apiValidarEmail.json()
@@ -31,7 +34,8 @@ export default function FormContaValidar(){
         e.preventDefault()
         setLoadingStatus(true)
         if(formDados.email){
-            const responseEnv = await ValidarEmail(formDados)
+            const segurancaReserva = encryptData(JSON.stringify(formDados), Envs.CHAVE_CODIFICADORA)
+            const responseEnv = await ValidarEmail(segurancaReserva)
             if(responseEnv.status == '200'){
                 setStatusVerificadores(true)
             }else{

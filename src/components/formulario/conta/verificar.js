@@ -1,13 +1,16 @@
 'use client';
+require('dotenv').config();
+import { Envs } from "src/utils/configEnv"
+import { encryptData } from "script/criptografarDados"
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { cookieAction } from 'src/app/action';
 import TelaCarregando from "@/components/carregando/telacarregando";
-async function postValidarLogin(formValidar, id) {
+async function postValidarLogin(formVerificar) {
     try {
-        const apiValidarLogin = await fetch('https://api.aprendacomeduke.com.br/api/contaRegistro/validar', {
+        const apiValidarLogin = await fetch(`${Envs.API_LOCAL}api/contaRegistro/validar`, {
             method: 'POST',
-            body: JSON.stringify({ form: formValidar, id: id }),
+            body: JSON.stringify({ dados: formVerificar}),
             headers: { 'Content-Type': 'application/json', }
         });
         return apiValidarLogin.json()
@@ -36,7 +39,12 @@ export default function FormContaVerificar({ id, modal }) {
         e.preventDefault()
         setLoadingStatus(true)
         if (codigo.a && codigo.b && codigo.c && codigo.d && codigo.e && codigo.f) {
-            const responseEnv = await postValidarLogin(codigo, id)
+            const capsulaDados = {
+                codigo: codigo,
+                id: id
+            }
+            const segurancaReserva = encryptData(JSON.stringify(capsulaDados), Envs.CHAVE_CODIFICADORA)
+            const responseEnv = await postValidarLogin(segurancaReserva)
             if (responseEnv.status == '200') {
                 const cadCookie = await cookieAction('cadastrar', 'UserToken', responseEnv.token, 60*100)
                 return router.push('/aprender')

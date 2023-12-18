@@ -5,11 +5,14 @@ import Btn from "@/components/botoes/btn";
 import Link from "next/link";
 import TelaCarregando from "@/components/carregando/telacarregando";
 import { useRouter } from 'next/navigation'
+import { encryptData } from "script/criptografarDados"
+import { Envs } from "src/utils/configEnv"
+
 async function postCadastro(formCadastro){
     try{
-        const apiCadastro = await fetch(`${process.env.LOCAL_API}contaRegistro/cadastrar`, {
+        const apiCadastro = await fetch(`${Envs.API_LOCAL}api/contaRegistro/cadastrar`, {
             method: 'POST',
-            body: JSON.stringify({form: formCadastro}),
+            body: JSON.stringify({dados: formCadastro}),
             headers: { 'Content-Type': 'application/json',}
         });
         return apiCadastro.json()
@@ -36,9 +39,8 @@ export default function FormContaCadastrar() {
         setLoadingStatus(true)
         if(formDados.nome && formDados.email){
             if(formDados.senha.length >= 6 && formDados.nome.length >=3){
-                const responseEnv = await postCadastro(formDados)
-                console.log(responseEnv)
-                console.log(responseEnv.status)
+                const segurancaReserva = encryptData(JSON.stringify(formDados), Envs.CHAVE_CODIFICADORA)
+                const responseEnv = await postCadastro(segurancaReserva)
                 if(responseEnv.status == 200){
                     return router.push('/conta/entrar')
                 }else{

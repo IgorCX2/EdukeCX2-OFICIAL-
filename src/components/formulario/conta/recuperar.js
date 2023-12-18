@@ -1,14 +1,17 @@
 "use client";
+require('dotenv').config();
+import { encryptData } from "script/criptografarDados"
+import { Envs } from "src/utils/configEnv"
 import { useState } from "react";
 import InputFunction from "../inputForms";
 import Btn from "@/components/botoes/btn";
 import TelaCarregando from "@/components/carregando/telacarregando";
 import { useRouter } from 'next/navigation'
-async function postNovaSenha(cod, senha) {
+async function postNovaSenha(formRecuperar) {
     try {
-        const apiNovaSenha = await fetch('https://api.aprendacomeduke.com.br/api/contaRegistro/nova-senha', {
+        const apiNovaSenha = await fetch(`${Envs.API_LOCAL}api/contaRegistro/nova-senha`, {
             method: 'POST',
-            body: JSON.stringify({cod: cod, senha: senha}),
+            body: JSON.stringify({dados: formRecuperar}),
             headers: { 'Content-Type': 'application/json', }
         });
         return apiNovaSenha.json()
@@ -33,7 +36,12 @@ export default function FormContaNovaSenha({link}){
         setLoadingStatus(true)
         if(formDados.senha){
             if(formDados.senha.length >= 6){
-                const responseEnv = await postNovaSenha(link, formDados.senha)
+                const capsulaDados = {
+                    cod: link,
+                    senha: formDados.senha
+                }
+                const segurancaReserva = encryptData(JSON.stringify( capsulaDados), Envs.CHAVE_CODIFICADORA)
+                const responseEnv = await postNovaSenha(segurancaReserva)
                 if(responseEnv.status == '200'){
                     return router.push('/conta/entrar')
                 }else{

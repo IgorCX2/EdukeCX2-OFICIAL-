@@ -6,15 +6,16 @@ import { useState } from "react"
 import { Envs } from "src/utils/configEnv"
 import { useRouter } from 'next/navigation'
 import { encryptData } from "script/criptografarDados"
+import { cookieAction } from 'src/app/action';
 import InputFunction from "../inputForms";
 import Btn from "@/components/botoes/btn";
 const FormContaVerificar = dynamic(() => import('./verificar'));
 import TelaCarregando from "@/components/carregando/telacarregando";
-async function postEntrar(formCadastro) {
+async function postEntrar(formEntrar) {
     try {
         const apiEntrar = await fetch(`${Envs.API_LOCAL}api/contaRegistro/entrar`, {
             method: 'POST',
-            body: JSON.stringify({ dados: formCadastro }),
+            body: JSON.stringify({ dados: formEntrar }),
             headers: { 'Content-Type': 'application/json', }
         });
         return apiEntrar.json()
@@ -43,7 +44,19 @@ export default function FormContaEntrar({modal}) {
             if (formDados.senha.length >= 6) {
                 const segurancaReserva = encryptData(JSON.stringify(formDados), Envs.CHAVE_CODIFICADORA)
                 const responseEnv = await postEntrar(segurancaReserva)
-                //const removerSeguranca = decryptData(responseEnv, Envs.CHAVE_CODIFICADORA)
+                if (responseEnv.status == 200) {
+                    const cadCookie = await cookieAction('cadastrar', 'UserToken', responseEnv.token, 60*100)
+                    return router.push('/aprender')
+                } else {
+                    setResponse({
+                        id: responseEnv.id,
+                        status: responseEnv.status,
+                        msg: responseEnv.msg
+                    });
+                }
+                if (responseEnv.status == 'verificar') {
+                    setStatusVerificadores(true)
+                }
             } else {
                 setResponse({ msg: "Obs: a senha deve ser maior que 6 digitos", status: '' })
             }
